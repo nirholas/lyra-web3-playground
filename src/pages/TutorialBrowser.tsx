@@ -6,6 +6,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import { 
   BookOpen, 
   Clock, 
@@ -19,6 +20,12 @@ import { tutorials } from '@/data/tutorials';
 import { computeCompletionPercent } from '@/utils/tutorialProgress';
 
 export default function TutorialBrowser() {
+  useSEO({
+    title: 'Tutorials',
+    description: 'Learn blockchain development with 50+ interactive tutorials. From Solidity basics to advanced DeFi and NFT development, all levels welcome.',
+    path: '/tutorials'
+  });
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');

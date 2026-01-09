@@ -7,6 +7,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
+import { useSEO } from '@/hooks/useSEO';
 import {
   Sparkles,
   Copy,
@@ -31,6 +32,12 @@ import { LyraCompiler, CompileOutput, CompiledContract } from '@/services/lyraCo
 export default function ContractPlayground() {
   const { address, isConnected, chainId } = useWalletStore();
   const { mode } = useThemeStore();
+  
+  useSEO({
+    title: 'AI Contract Playground',
+    description: 'Generate and deploy smart contracts with AI. 40+ templates for ERC-20, ERC-721, DeFi, DAO, and more. Compile and deploy to any EVM chain in seconds.',
+    path: '/playground'
+  });
   
   // State
   const [prompt, setPrompt] = useState('');

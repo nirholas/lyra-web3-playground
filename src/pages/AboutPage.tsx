@@ -8,6 +8,7 @@
  * AboutPage.tsx - About page with project information
  */
 import { Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import {
   Heart,
   Github,
@@ -93,6 +94,12 @@ const features = [
 ];
 
 export default function AboutPage() {
+  useSEO({
+    title: 'About Lyra',
+    description: 'Lyra is a free, open-source Web3 learning platform. Our mission is to make blockchain development accessible to everyone through interactive tutorials and hands-on coding.',
+    path: '/about'
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
       {/* Hero Section */}

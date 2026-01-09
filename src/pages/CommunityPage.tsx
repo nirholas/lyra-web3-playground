@@ -8,6 +8,7 @@
  * CommunityPage.tsx - Community page with real links
  */
 import { Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import {
   Github,
   Twitter,
@@ -99,6 +100,12 @@ const contributionWays: ContributionWay[] = [
 ];
 
 export default function CommunityPage() {
+  useSEO({
+    title: 'Community',
+    description: 'Join the Lyra Web3 community. Contribute to open source, share projects, get help from fellow developers, and shape the future of blockchain education.',
+    path: '/community'
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Hero */}

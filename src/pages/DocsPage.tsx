@@ -6,6 +6,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import {
   BookOpen,
   Search,
@@ -127,6 +128,12 @@ const quickLinks = [
 ];
 
 export default function DocsPage() {
+  useSEO({
+    title: 'Documentation',
+    description: 'Comprehensive documentation for Lyra Web3 Playground. Learn Solidity, smart contract development, DeFi protocols, NFT standards, and more.',
+    path: '/docs'
+  });
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);

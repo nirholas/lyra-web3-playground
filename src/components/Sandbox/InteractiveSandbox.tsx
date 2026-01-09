@@ -29,6 +29,7 @@ import { useThemeStore } from '@/stores/themeStore';
 import { LyraCompiler } from '@/services/lyraCompiler';
 import { NETWORK_CONFIGS } from '@/utils/networks';
 import { SandboxTemplate } from '@/utils/sandboxTemplates';
+import { ContractTemplate } from '@/utils/contractTemplates';
 import FileTree from './FileTree.tsx';
 import ContractInteraction from './ContractInteraction.tsx';
 import ConsolePanel from './ConsolePanel.tsx';
@@ -337,12 +338,30 @@ export default function InteractiveSandbox() {
     setShowTemplateSelector(false);
   };
 
+  const handleLoadContractTemplate = (template: ContractTemplate) => {
+    if (!workspace) return;
+    
+    // Create a single file from the contract template
+    const fileName = `${template.name.replace(/[^a-zA-Z0-9]/g, '')}.sol`;
+    addFile(workspace.id, {
+      name: fileName,
+      path: fileName,
+      content: template.code,
+      language: 'solidity'
+    });
+    
+    addLog('success', `Loaded contract: ${template.name}`);
+    setShowTemplateSelector(false);
+  };
+
   return (
     <>
       {showTemplateSelector && (
         <TemplateSelector
           onClose={() => setShowTemplateSelector(false)}
           onSelect={handleLoadTemplate}
+          onContractSelect={handleLoadContractTemplate}
+          showContractTemplates={true}
         />
       )}
       <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">

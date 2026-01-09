@@ -6,6 +6,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import {
   useTopCoins,
   useTrending,
@@ -539,6 +540,12 @@ function ChainsTab() {
 // ============================================================
 
 export default function MarketsPage() {
+  useSEO({
+    title: 'Crypto Markets - Live Prices & DeFi Data',
+    description: 'Real-time cryptocurrency prices, DeFi protocol TVL, yield farming APY, and cross-chain analytics. Track Bitcoin, Ethereum, and 1000+ tokens.',
+    path: '/markets'
+  });
+
   const [activeTab, setActiveTab] = useState<Tab>('markets');
   
   return (

@@ -9,6 +9,7 @@
  */
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import {
   Search,
   Filter,
@@ -52,6 +53,12 @@ const sortOptions: { id: SortBy; label: string; icon: any }[] = [
 ];
 
 export default function ExplorePage() {
+  useSEO({
+    title: 'Explore Projects',
+    description: 'Discover community-built smart contracts, dApps, and tutorials. Browse, fork, and learn from real Web3 projects built on Lyra.',
+    path: '/explore'
+  });
+
   const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuthStore();
   

@@ -6,8 +6,12 @@
 
 import { useState } from 'react';
 import { FullStackPlayground, PlaygroundFile } from '@/components/FullStackPlayground';
-import { ArrowLeft, Rocket, Sparkles, Zap } from 'lucide-react';
+import { ArrowLeft, Rocket, Sparkles, Zap, FileCode } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
+import TemplateSelector from '@/components/Sandbox/TemplateSelector';
+import { SandboxTemplate } from '@/utils/sandboxTemplates';
+import { ContractTemplate } from '@/utils/contractTemplates';
 
 // Demo files for the full-stack playground
 const demoFiles: PlaygroundFile[] = [
@@ -219,35 +223,96 @@ contract WalletRegistry {
 ];
 
 export default function FullStackDemoPage() {
-  return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 text-white">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <Link 
-            to="/examples" 
-            className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Examples
-          </Link>
-          
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-3 bg-white/20 rounded-xl">
-              <Rocket className="w-8 h-8" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold">Full-Stack Playground</h1>
-              <p className="text-white/80">Edit React + Solidity + CSS with live preview</p>
-            </div>
-          </div>
+  useSEO({
+    title: 'Full-Stack Web3 Demo',
+    description: 'Interactive full-stack Web3 demo with editable React components, smart contract integration, and live preview. Experience blockchain development hands-on.',
+    path: '/fullstack'
+  });
 
-          <div className="flex flex-wrap gap-2 mt-4">
-            <span className="px-3 py-1 bg-white/20 rounded-full text-sm flex items-center gap-1">
-              <Sparkles className="w-3 h-3" /> Live Preview
-            </span>
-            <span className="px-3 py-1 bg-white/20 rounded-full text-sm flex items-center gap-1">
-              <Zap className="w-3 h-3" /> Multi-File Editor
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
+  const [files, setFiles] = useState<PlaygroundFile[]>(demoFiles);
+
+  const handleLoadTemplate = (template: SandboxTemplate) => {
+    // Convert workspace template files to PlaygroundFiles
+    const newFiles: PlaygroundFile[] = template.files.map((file, index) => ({
+      id: `file-${index}`,
+      name: file.name.replace(/\.[^/.]+$/, ''), // Remove extension for display
+      language: file.language as 'typescript' | 'javascript' | 'solidity' | 'css' | 'html' | 'json',
+      icon: file.language === 'solidity' ? 'contract' as const : 
+            file.language === 'css' ? 'style' as const : 'react' as const,
+      code: file.content
+    }));
+    if (newFiles.length > 0) {
+      setFiles(newFiles);
+    }
+    setShowTemplateSelector(false);
+  };
+
+  const handleLoadContractTemplate = (template: ContractTemplate) => {
+    // Add contract as a new Solidity file to the playground
+    const contractFile: PlaygroundFile = {
+      id: `contract-${Date.now()}`,
+      name: template.name.replace(/[^a-zA-Z0-9]/g, ''),
+      language: 'solidity',
+      icon: 'contract',
+      code: template.code
+    };
+    
+    // Replace existing Solidity file or add new one
+    const hasSolidity = files.some(f => f.language === 'solidity');
+    if (hasSolidity) {
+      setFiles(files.map(f => f.language === 'solidity' ? contractFile : f));
+    } else {
+      setFiles([...files, contractFile]);
+    }
+    setShowTemplateSelector(false);
+  };
+
+  return (
+    <>
+      {showTemplateSelector && (
+        <TemplateSelector
+          onClose={() => setShowTemplateSelector(false)}
+          onSelect={handleLoadTemplate}
+          onContractSelect={handleLoadContractTemplate}
+          showContractTemplates={true}
+        />
+      )}
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 text-white">
+          <div className="max-w-7xl mx-auto px-4 py-8">
+            <Link 
+              to="/examples" 
+              className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Examples
+            </Link>
+            
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-white/20 rounded-xl">
+                <Rocket className="w-8 h-8" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold">Full-Stack Playground</h1>
+                <p className="text-white/80">Edit React + Solidity + CSS with live preview</p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-4">
+              <button
+                onClick={() => setShowTemplateSelector(true)}
+                className="px-4 py-1.5 bg-white/20 hover:bg-white/30 rounded-full text-sm flex items-center gap-2 transition-colors"
+              >
+                <FileCode className="w-4 h-4" />
+                Load Template (46 available)
+              </button>
+              <span className="px-3 py-1 bg-white/20 rounded-full text-sm flex items-center gap-1">
+                <Sparkles className="w-3 h-3" /> Live Preview
+              </span>
+              <span className="px-3 py-1 bg-white/20 rounded-full text-sm flex items-center gap-1">
+                <Zap className="w-3 h-3" /> Multi-File Editor
             </span>
             <span className="px-3 py-1 bg-purple-400/30 rounded-full text-sm">React</span>
             <span className="px-3 py-1 bg-blue-400/30 rounded-full text-sm">Solidity</span>
@@ -278,7 +343,7 @@ export default function FullStackDemoPage() {
         <FullStackPlayground
           title="Wallet Connect Example"
           description="A complete wallet connection flow with React frontend and Solidity smart contract. Edit any file to see live changes!"
-          files={demoFiles}
+          files={files}
         />
 
         {/* Next Steps */}
@@ -307,5 +372,6 @@ export default function FullStackDemoPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

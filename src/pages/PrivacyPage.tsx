@@ -5,6 +5,7 @@
  */
 
 import { Shield, Eye, Database, Lock, UserCheck, Globe, Mail, Calendar } from 'lucide-react';
+import { useSEO } from '@/hooks/useSEO';
 
 interface ContentBlock {
   subtitle?: string;
@@ -18,6 +19,12 @@ interface Section {
 }
 
 export default function PrivacyPage() {
+  useSEO({
+    title: 'Privacy Policy',
+    description: 'Lyra Web3 Playground privacy policy. Learn how we protect your data, handle wallet connections, and respect your privacy in our blockchain development platform.',
+    path: '/privacy'
+  });
+
   const lastUpdated = 'December 26, 2025';
 
   const sections: Section[] = [

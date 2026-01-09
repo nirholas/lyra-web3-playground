@@ -5,8 +5,9 @@
  */
 
 import { useState } from 'react';
-import { ArrowLeft, Layout, BookOpen, Code2, Zap } from 'lucide-react';
+import { ArrowLeft, Layout, BookOpen, Code2, Zap, FileCode } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import SplitView from '@/components/Playground/SplitView';
 import MultiLanguageTabs, { LanguageTab } from '@/components/Playground/MultiLanguageTabs';
 import LivePreview from '@/components/Playground/LivePreview';
@@ -14,14 +15,24 @@ import InteractiveTutorial, { TutorialStep } from '@/components/Playground/Inter
 import ChallengeSystem, { Challenge } from '@/components/Playground/ChallengeSystem';
 import ProgressiveLevels, { LevelInfo, DifficultyLevel } from '@/components/Playground/ProgressiveLevels';
 import { AnnotationsPanel, CodeAnnotation } from '@/components/Playground/InlineAnnotations';
+import TemplateSelector from '@/components/Sandbox/TemplateSelector';
+import { SandboxTemplate } from '@/utils/sandboxTemplates';
+import { ContractTemplate } from '@/utils/contractTemplates';
 
 type ViewMode = 'tutorial' | 'challenge' | 'freeform';
 
 export default function InteractiveLearningPlayground() {
+  useSEO({
+    title: 'Interactive Learning Playground',
+    description: 'Master blockchain development with interactive tutorials, coding challenges, and progressive difficulty levels. Learn Solidity and Web3 step-by-step.',
+    path: '/learn'
+  });
+
   const [viewMode, setViewMode] = useState<ViewMode>('tutorial');
   const [currentLevel, setCurrentLevel] = useState<DifficultyLevel>('beginner');
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [showSidebar, setShowSidebar] = useState(true);
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
 
   // Multi-language code state
   const [tabs, setTabs] = useState<LanguageTab[]>([
@@ -315,8 +326,51 @@ contract SimpleWallet {
     setTabs(tabs.map(tab => tab.id === activeTab.id ? { ...tab, code } : tab));
   };
 
+  const handleLoadTemplate = (template: SandboxTemplate) => {
+    // Load workspace template files into tabs
+    const newTabs: LanguageTab[] = template.files.map((file, index) => ({
+      id: file.path || `file-${index}`,
+      label: file.name,
+      language: file.language as LanguageTab['language'],
+      code: file.content
+    }));
+    if (newTabs.length > 0) {
+      setTabs(newTabs);
+    }
+    setShowTemplateSelector(false);
+  };
+
+  const handleLoadContractTemplate = (template: ContractTemplate) => {
+    // Add contract as a Solidity tab
+    const existingSolidityTab = tabs.find(t => t.language === 'solidity');
+    if (existingSolidityTab) {
+      setTabs(tabs.map(tab => 
+        tab.id === existingSolidityTab.id 
+          ? { ...tab, code: template.code, label: template.name }
+          : tab
+      ));
+    } else {
+      setTabs([...tabs, {
+        id: 'solidity',
+        label: template.name,
+        language: 'solidity',
+        code: template.code
+      }]);
+    }
+    setShowTemplateSelector(false);
+  };
+
   return (
-    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+    <>
+      {showTemplateSelector && (
+        <TemplateSelector
+          onClose={() => setShowTemplateSelector(false)}
+          onSelect={handleLoadTemplate}
+          onContractSelect={handleLoadContractTemplate}
+          showContractTemplates={true}
+        />
+      )}
+      <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <header className="flex-none bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -370,6 +424,15 @@ contract SimpleWallet {
             </button>
 
             <div className="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-2" />
+
+            <button
+              onClick={() => setShowTemplateSelector(true)}
+              className="flex items-center gap-2 px-3 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg font-medium transition-colors hover:bg-purple-200 dark:hover:bg-purple-900/50"
+              title="Load from 46 templates"
+            >
+              <FileCode className="w-4 h-4" />
+              Templates
+            </button>
 
             <button
               onClick={() => setShowSidebar(!showSidebar)}
@@ -458,5 +521,6 @@ contract SimpleWallet {
         </div>
       </div>
     </div>
+    </>
   );
 }

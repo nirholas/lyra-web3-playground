@@ -6,6 +6,7 @@
 
 import { useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import WebSandbox from '@/components/Sandbox/WebSandbox';
 import SoliditySandbox from '@/components/Sandbox/SoliditySandbox';
 import { Code2, FileCode, Layers, Sparkles, Zap, Globe, ArrowRight, Home } from 'lucide-react';
@@ -14,6 +15,12 @@ import { cn } from '@/utils/helpers';
 type SandboxType = 'web' | 'solidity' | null;
 
 export default function SandboxPage() {
+  useSEO({
+    title: 'IDE - Online Solidity & Web Development',
+    description: 'Free browser-based IDE for Solidity and web development. Compile smart contracts, deploy to testnets, and build full-stack dApps with live preview.',
+    path: '/ide'
+  });
+
   const [searchParams, setSearchParams] = useSearchParams();
   const typeParam = searchParams.get('type');
   const [selectedType, setSelectedType] = useState<SandboxType>(
@@ -50,7 +57,7 @@ export default function SandboxPage() {
         </Link>
         <div className="ml-4 flex items-center gap-2">
           <Zap className="w-4 h-4 text-primary-500" />
-          <span className="text-sm font-medium text-white">Lyra IDE</span>
+          <span className="text-sm font-medium text-white">Lyra UDE</span>
         </div>
       </header>
 
@@ -162,7 +169,7 @@ export default function SandboxPage() {
             {/* Content */}
             <div className="relative">
               <h2 className="text-2xl font-bold mb-3 group-hover:text-purple-400 transition-colors">
-                Solidity IDE
+                Solidity UDE
               </h2>
               <p className="text-gray-400 mb-6">
                 Build smart contracts with our professional Solidity development environment.

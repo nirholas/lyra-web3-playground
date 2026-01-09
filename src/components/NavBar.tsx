@@ -12,6 +12,7 @@ import { useWalletStore } from '@/stores/walletStore';
 import { truncateAddress } from '@/utils/helpers';
 import WalletConnect from './WalletConnect';
 import LanguageSelector from './LanguageSelector';
+import UserButton from './UserButton';
 import { useAnnounce } from './Accessibility';
 import useI18n from '@/stores/i18nStore';
 
@@ -160,18 +161,7 @@ export default function NavBar() {
                 )}
               </button>
 
-              <button
-                onClick={() => setShowWalletModal(true)}
-                className="btn-primary flex items-center space-x-2"
-                aria-label={isConnected && address ? `Wallet connected: ${truncateAddress(address)}` : 'Connect wallet'}
-              >
-                <Wallet className="w-4 h-4" aria-hidden="true" />
-                <span className={isConnected ? 'status-indicator status-success status-active' : ''}>
-                  {isConnected && address
-                    ? truncateAddress(address)
-                    : 'Connect Wallet'}
-                </span>
-              </button>
+              <UserButton />
             </div>
 
             {/* Mobile Menu Button */}

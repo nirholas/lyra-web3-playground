@@ -7,7 +7,8 @@
 /**
  * ProjectsPage.tsx - Community Projects and Features
  */
-import { Clock, Rocket, Shield, Globe2, Users, Sparkles, CheckCircle2, ArrowRight, Code2, BookOpen, Layers, Wrench, Video } from 'lucide-react';
+import { Clock, Rocket, Shield, Globe2, Users, Sparkles, CheckCircle2, ArrowRight, Code2, BookOpen, Layers, Wrench, Video, Share2, Cloud, ExternalLink, User, Key, FolderOpen, Link2 } from 'lucide-react';
+import { useSEO } from '@/hooks/useSEO';
 
 interface ProjectItem {
   title: string;
@@ -20,11 +21,11 @@ interface ProjectItem {
 const projects: ProjectItem[] = [
   // LIVE - Current Features
   {
-    title: 'Interactive Playground',
-    description: 'Browser-based Solidity IDE with Monaco Editor, live compilation, and testnet deployment.',
+    title: 'Universal Development Environment',
+    description: 'Browser-based UDE with Monaco Editor, live compilation, multi-language support, and testnet deployment.',
     status: 'live',
     icon: <Code2 className="w-5 h-5" />,
-    badges: ['Live', 'Solidity']
+    badges: ['Live', 'Web', 'Solidity']
   },
   {
     title: 'Smart Contract Templates',
@@ -48,6 +49,13 @@ const projects: ProjectItem[] = [
     badges: ['8 Chains']
   },
   // BUILDING - In Progress
+  {
+    title: 'Cross-Platform Export',
+    description: 'Export projects to CodePen, JSFiddle, GitHub Gist, and more with one click.',
+    status: 'building',
+    icon: <ExternalLink className="w-5 h-5" />,
+    badges: ['CodePen', 'JSFiddle', 'Gist']
+  },
   {
     title: 'AI Code Assistant',
     description: 'AI-powered code suggestions, vulnerability detection, and gas optimization recommendations.',
@@ -77,6 +85,48 @@ const projects: ProjectItem[] = [
     badges: ['L2', 'EVM']
   },
   // PLANNED - Future
+  {
+    title: 'User Profiles & Privy Auth',
+    description: 'Create your profile with Privy login. Email, social, or wallet—your identity, your way.',
+    status: 'planned',
+    icon: <Key className="w-5 h-5" />,
+    badges: ['Privy', 'Web3 Auth', 'Profiles']
+  },
+  {
+    title: 'Project Dashboard',
+    description: 'Save, edit, and manage all your projects in one place. Fork, version, and organize your work.',
+    status: 'planned',
+    icon: <FolderOpen className="w-5 h-5" />,
+    badges: ['Save', 'Edit', 'Organize']
+  },
+  {
+    title: 'Share & Collaborate',
+    description: 'Share projects via link, invite collaborators, and build together in real-time.',
+    status: 'planned',
+    icon: <Link2 className="w-5 h-5" />,
+    badges: ['Links', 'Teams', 'Real-time']
+  },
+  {
+    title: 'Community Explore',
+    description: 'Discover and remix projects from the community. Like, comment, and feature the best creations.',
+    status: 'planned',
+    icon: <Users className="w-5 h-5" />,
+    badges: ['Discover', 'Remix', 'Social']
+  },
+  {
+    title: 'Lyra Hosting',
+    description: 'Host your web apps and dApps directly from the UDE. Custom subdomains, SSL, and CDN included.',
+    status: 'planned',
+    icon: <Cloud className="w-5 h-5" />,
+    badges: ['Hosting', 'Deploy', 'CDN']
+  },
+  {
+    title: 'Contract Registry',
+    description: 'Deploy and manage smart contracts with a permanent registry. Verified source, ABI hosting, and interaction UI.',
+    status: 'planned',
+    icon: <Share2 className="w-5 h-5" />,
+    badges: ['Contracts', 'Verification']
+  },
   {
     title: 'Collaborative Editing',
     description: 'Real-time collaborative code editing for pair programming and team learning.',
@@ -120,6 +170,12 @@ const statusLabels: Record<ProjectItem['status'], string> = {
 };
 
 export default function RoadmapPage() {
+  useSEO({
+    title: 'Roadmap & Projects',
+    description: 'See what we\'re building at Lyra. Live features, current development, and planned updates. Transparent project roadmap for the Web3 community.',
+    path: '/projects'
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-16">
       <div className="container mx-auto px-4">
