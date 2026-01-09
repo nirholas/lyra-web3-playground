@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import Editor, { OnMount } from '@monaco-editor/react';
 import { useThemeStore } from '@/stores/themeStore';
 import { useWalletStore } from '@/stores/walletStore';
@@ -52,7 +53,8 @@ import {
   PanelLeftOpen,
   GripVertical,
   Search,
-  Share2
+  Share2,
+  Home
 } from 'lucide-react';
 import { cn } from '@/utils/helpers';
 
@@ -936,6 +938,14 @@ contract ${name.replace('.sol', '')} {
       {/* Header */}
       <header className="flex items-center justify-between px-4 h-12 bg-gray-800 border-b border-gray-700 flex-shrink-0">
         <div className="flex items-center gap-3">
+          <Link
+            to="/"
+            className="flex items-center gap-1.5 px-2 py-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors"
+            title="Back to Home"
+          >
+            <Home className="w-4 h-4" />
+          </Link>
+          <div className="w-px h-5 bg-gray-700" />
           <Code2 className="w-5 h-5 text-purple-500" />
           <span className="font-semibold text-sm">Solidity IDE</span>
           <span className="text-xs px-2 py-0.5 bg-purple-600/30 text-purple-400 rounded">

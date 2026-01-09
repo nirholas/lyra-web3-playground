@@ -4,7 +4,7 @@
  * 💫 The future is being built right here 🏗️
  */
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import {
   Play,
@@ -74,7 +74,7 @@ export default function InteractiveSandbox() {
 
   const [showAI, setShowAI] = useState(false);
   const [showTemplateSelector, setShowTemplateSelector] = useState(false);
-  const [activePanel, setActivePanel] = useState<'interaction' | 'console' | 'ai' | 'whisperer' | 'timemachine' | 'exploit' | 'arena' | 'neural' | 'crosschain'>('interaction');
+  const [activePanel, setActivePanel] = useState<'preview' | 'interaction' | 'console' | 'ai' | 'whisperer' | 'timemachine' | 'exploit' | 'arena' | 'neural' | 'crosschain'>('preview');
   const [innovationMode, setInnovationMode] = useState(false);
   
   const [isCompiling, setIsCompiling] = useState(false);
@@ -83,6 +83,11 @@ export default function InteractiveSandbox() {
   const [deployedContract, setDeployedContract] = useState<DeployedContract | null>(null);
   const [logs, setLogs] = useState<Log[]>([]);
   const [solcVersion, setSolcVersion] = useState('0.8.20');
+  
+  // Web preview state
+  const [previewKey, setPreviewKey] = useState(0);
+  const previewTimer = useRef<number | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   const editorRef = useRef<any>(null);
   const workspace = getCurrentWorkspace();
@@ -98,6 +103,39 @@ export default function InteractiveSandbox() {
     setLogs(prev => [log, ...prev].slice(0, 100)); // Keep last 100 logs
   };
 
+  // Listen for console messages from preview iframe
+  useEffect(() => {
+    const handler = (ev: MessageEvent) => {
+      const data = ev.data as any;
+      if (data && data.__lyra_preview_console) {
+        const time = new Date().toLocaleTimeString();
+        const text = (data.entries || []).join(' ');
+        const typeMap: Record<string, Log['type']> = { log: 'info', info: 'info', warn: 'warning', error: 'error' };
+        addLog(typeMap[data.type] || 'info', text);
+      }
+    };
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  // Build preview srcDoc from workspace files
+  const buildPreviewSrcDoc = () => {
+    if (!workspace) return '<div>No workspace</div>';
+    const htmlFile = workspace.files.find(f => f.name.endsWith('.html'))?.content || '<div id="root"></div>';
+    const css = workspace.files.filter(f => f.name.endsWith('.css')).map(f => f.content).join('\n');
+    const js = workspace.files.filter(f => f.name.endsWith('.js')).map(f => f.content).join('\n');
+    const consoleBridge = `\n<script>;(function(){const origConsole={log:console.log,warn:console.warn,error:console.error,info:console.info};function send(type,args){try{parent.postMessage({__lyra_preview_console:true,type,entries:args.map(a=>String(a))},'*')}catch(e){}}['log','warn','error','info'].forEach(function(m){console[m]=function(){send(m,Array.from(arguments));try{origConsole[m].apply(console,arguments);}catch(e){}}});})();</script>`;
+    return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1" /><style>${css}</style></head><body>${htmlFile}${consoleBridge}<script>${js}</script></body></html>`;
+  };
+
+  // Debounced preview update
+  const schedulePreviewUpdate = () => {
+    if (previewTimer.current) window.clearTimeout(previewTimer.current);
+    previewTimer.current = window.setTimeout(() => {
+      setPreviewKey(k => k + 1);
+    }, 300);
+  };
+
   const handleEditorMount = (editor: any) => {
     editorRef.current = editor;
   };
@@ -105,6 +143,10 @@ export default function InteractiveSandbox() {
   const handleEditorChange = (value: string | undefined) => {
     if (!workspace || !activeFile || !value) return;
     updateFile(workspace.id, activeFile.id, value);
+    // Trigger preview update for web files
+    if (activeFile.name.endsWith('.html') || activeFile.name.endsWith('.css') || activeFile.name.endsWith('.js')) {
+      schedulePreviewUpdate();
+    }
   };
 
   const handleCompile = async () => {
@@ -509,6 +551,17 @@ export default function InteractiveSandbox() {
           {/* Panel Tabs */}
           <div className="border-b border-gray-200 dark:border-gray-700 px-4 py-2 flex items-center gap-2">
             <button
+              onClick={() => setActivePanel('preview')}
+              className={`px-3 py-1.5 text-sm rounded ${
+                activePanel === 'preview'
+                  ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+              }`}
+            >
+              <Play className="w-4 h-4 inline mr-2" />
+              Preview
+            </button>
+            <button
               onClick={() => setActivePanel('interaction')}
               className={`px-3 py-1.5 text-sm rounded ${
                 activePanel === 'interaction'
@@ -625,6 +678,18 @@ export default function InteractiveSandbox() {
 
           {/* Panel Content */}
           <div className="flex-1 overflow-y-auto">
+            {activePanel === 'preview' && (
+              <div className="h-full flex flex-col">
+                <iframe
+                  key={previewKey}
+                  ref={iframeRef}
+                  title="Preview"
+                  className="flex-1 w-full bg-white"
+                  sandbox="allow-scripts allow-modals allow-forms allow-same-origin"
+                  srcDoc={buildPreviewSrcDoc()}
+                />
+              </div>
+            )}
             {activePanel === 'interaction' && (
               <ContractInteraction
                 contract={deployedContract}

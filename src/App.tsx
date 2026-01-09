@@ -44,6 +44,14 @@ import ContributePage from './pages/ContributePage';
 import ExplorePage from './pages/ExplorePage';
 import SharedProjectPage from './pages/SharedProjectPage';
 import MarketsPage from './pages/MarketsPage';
+import {
+  AICodeWhispererPage,
+  ContractTimeMachinePage,
+  ExploitLabPage,
+  CollaborativeArenaPage,
+  NeuralGasOraclePage,
+  CrossChainDreamWeaverPage
+} from './pages/innovation';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import MobileBottomNav from './components/MobileBottomNav';
@@ -115,6 +123,12 @@ function AppContent() {
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/community" element={<CommunityPage />} />
             <Route path="/innovation" element={<InnovationShowcase />} />
+            <Route path="/innovation/ai-whisperer" element={<AICodeWhispererPage />} />
+            <Route path="/innovation/time-machine" element={<ContractTimeMachinePage />} />
+            <Route path="/innovation/exploit-lab" element={<ExploitLabPage />} />
+            <Route path="/innovation/arena" element={<CollaborativeArenaPage />} />
+            <Route path="/innovation/gas-oracle" element={<NeuralGasOraclePage />} />
+            <Route path="/innovation/cross-chain" element={<CrossChainDreamWeaverPage />} />
             <Route path="/projects" element={<RoadmapPage />} />
             <Route path="/changelog" element={<ChangelogPage />} />
             <Route path="/learn" element={<InteractiveLearningPlayground />} />

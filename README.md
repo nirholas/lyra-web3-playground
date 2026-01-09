@@ -13,11 +13,69 @@
 [![Accessibility](https://img.shields.io/badge/a11y-WCAG%202.1%20AAA-purple)](docs/ACCESSIBILITY.md)
 [![i18n](https://img.shields.io/badge/i18n-10%20languages-orange)](docs/ARCHITECTURE.md)
 
-> **Learn blockchain development by doing.** Write, compile, and deploy smart contracts directly in your browser — no setup required.
+> **A comprehensive open-source Web3 learning platform.** Professional development environments, AI-assisted tools, security testing, and collaborative features — all in your browser.
 
 <p align="center">
-  <a href="https://lyra.works"><strong>🚀 Try it now at lyra.works →</strong></a>
+  <a href="https://lyra.works"><strong>Try it now at lyra.works →</strong></a>
 </p>
+
+---
+
+## 🛠️ Development Environments
+
+### Professional IDEs
+
+| Tool | Description | Link |
+|------|-------------|------|
+| **Web Sandbox** | Full-featured web IDE with React, Vue, Python, live preview, Vim mode | [lyra.works/ide?type=web](https://lyra.works/ide?type=web) |
+| **Solidity IDE** | Smart contract IDE with multi-version compiler (0.6.x - 0.8.24) | [lyra.works/ide?type=solidity](https://lyra.works/ide?type=solidity) |
+| **Full-Stack Playground** | Build complete dApps with contract + frontend + live preview | [lyra.works/fullstack-demo](https://lyra.works/fullstack-demo) |
+| **Interactive Sandbox** | IDE with AI assistant, templates, and testnet deployment | [lyra.works/sandbox](https://lyra.works/sandbox) |
+
+### Innovation Lab (Experimental)
+
+Access at [lyra.works/innovation](https://lyra.works/innovation) or enable "Innovation Mode" in the sandbox:
+
+| Feature | Capability |
+|---------|------------|
+| **AI Code Whisperer** | Real-time vulnerability detection, voice control, auto-fix suggestions |
+| **Contract Time Machine** | Version history, branching, state simulation |
+| **Security Testing Lab** | Test contracts against reentrancy, flash loans, overflow attacks |
+| **Collaborative Arena** | Code with AI teammates, participate in challenges |
+| **Neural Gas Oracle** | ML-powered gas prediction and optimization |
+| **Cross-Chain Deployer** | Deploy to 8+ chains with automated bridge setup |
+
+### ♿ Accessibility (WCAG 2.1 AAA)
+
+Comprehensive accessibility support:
+
+| Feature | Description |
+|---------|-------------|
+| **Dwell Click** | Click by hovering — no mouse button required |
+| **Reading Guide** | Horizontal line follows cursor position |
+| **Color Blind Filters** | Protanopia, Deuteranopia, Tritanopia support |
+| **Text-to-Speech** | Read content aloud with adjustable speed/pitch |
+| **Cognitive Support** | Simplified mode, focus mode, extended timeouts |
+| **Code-to-English** | Translates Solidity to plain English explanations |
+
+See [ACCESSIBILITY.md](docs/ACCESSIBILITY.md) for complete documentation.
+
+---
+
+## Quick Access to All Tools
+
+| Tool | URL | Description |
+|------|-----|-------------|
+| **IDE Hub** | [/ide](https://lyra.works/ide) | Choose Web Sandbox or Solidity IDE |
+| **Web Sandbox** | [/ide?type=web](https://lyra.works/ide?type=web) | HTML/CSS/JS/React/Vue/Python IDE |
+| **Solidity IDE** | [/ide?type=solidity](https://lyra.works/ide?type=solidity) | Smart contract development |
+| **Interactive Sandbox** | [/sandbox](https://lyra.works/sandbox) | Sandbox with AI assistant |
+| **Contract Playground** | [/playground](https://lyra.works/playground) | Template-based contract editor |
+| **Learning Playground** | [/learn](https://lyra.works/learn) | Interactive tutorials |
+| **Full-Stack Demo** | [/fullstack-demo](https://lyra.works/fullstack-demo) | Contract + Frontend builder |
+| **Innovation Lab** | [/innovation](https://lyra.works/innovation) | Experimental AI features |
+| **Markets** | [/markets](https://lyra.works/markets) | Live crypto prices & DeFi data |
+| **Explore** | [/explore](https://lyra.works/explore) | Community projects gallery |
 
 ---
 
@@ -105,6 +163,15 @@
 - **Console panel** with log/warn/error capture
 - **Settings panel**: Theme, font size, Vim mode, auto-save, and more
 
+### 🎮 Interactive Code Playground (`/playground`)
+- **Multi-file editor** with file tabs (HTML, CSS, JS, Solidity, JSON, and more)
+- **Dual-pane layout** with live hot-reload preview
+- **Console capture** — see `console.log/warn/error` from your code in real-time
+- **File management** — create, delete, and switch between files
+- **AI-powered contract generation** from natural language prompts
+- **40+ smart contract templates** ready to deploy
+- **One-click deployment** to any supported blockchain
+
 ### 🔧 Solidity Development (NEW!)
 - **Multiple Solidity versions** (0.6.x through 0.8.24)
 - **Real-time compilation** with error/warning highlighting
@@ -114,11 +181,14 @@
 - **Copy ABI/Bytecode** with one click
 - **Keyboard shortcuts** (Ctrl+S to compile)
 
-### 🎮 Interactive Code Playground
-- Full-featured Solidity editor with syntax highlighting and autocomplete
-- Compile contracts in-browser using solc.js
-- Deploy to testnets with one click
-- Real-time error feedback and gas estimation
+### �️ Full-Stack Sandbox (`/sandbox`)
+- **File tree navigation** with workspace management
+- **Web preview panel** with live hot-reload for HTML/CSS/JS projects
+- **Console log capture** from preview iframe
+- **Contract interaction panel** for deployed smart contracts
+- **AI Assistant integration** for code suggestions
+- **Innovation Mode** — experimental features like AI Whisperer, Time Machine, Exploit Lab
+- **Export/share** workspaces with one click
 
 ### 📚 Smart Contract Templates
 - **40+ ready-to-use templates** across categories:
@@ -317,7 +387,10 @@ npm run preview
 |----------|-------------|
 | [Getting Started](docs/GETTING_STARTED.md) | **New to blockchain? Start here!** |
 | [Quick Start Guide](docs/QUICKSTART.md) | Get up and running locally |
-| [Sandbox Guide](docs/SANDBOX_GUIDE.md) | How to use the IDE |
+| [IDE Guide](docs/IDE_GUIDE.md) | **All development environments & URLs** |
+| [Sandbox Guide](docs/SANDBOX_GUIDE.md) | Premium sandbox features |
+| [Innovation Lab](docs/INNOVATION_LAB.md) | **AI & experimental features** |
+| [Playgrounds](docs/PLAYGROUNDS.md) | **All playground components** |
 | [Architecture Overview](docs/ARCHITECTURE.md) | System design |
 | [Backend API](docs/BACKEND_API.md) | API reference |
 | [Deployment Guide](docs/DEPLOYMENT.md) | Deploy your own instance |

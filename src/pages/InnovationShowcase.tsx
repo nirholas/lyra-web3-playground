@@ -17,7 +17,9 @@ import {
   Award,
   TrendingUp,
   Code2,
-  Heart
+  Heart,
+  Globe,
+  ArrowRight
 } from 'lucide-react';
 
 export default function InnovationShowcase() {
@@ -28,7 +30,8 @@ export default function InnovationShowcase() {
       description: 'Real-time AI analysis with voice control. Detects vulnerabilities, optimizes gas, and suggests improvements as you type.',
       gradient: 'from-purple-600 to-blue-600',
       stats: ['94% accuracy', 'Voice-enabled', 'Auto-fix'],
-      demo: 'Live vulnerability detection in milliseconds'
+      demo: 'Live vulnerability detection in milliseconds',
+      link: '/innovation/ai-whisperer'
     },
     {
       icon: <History className="w-12 h-12" />,
@@ -36,7 +39,8 @@ export default function InnovationShowcase() {
       description: 'Travel through your code\'s evolution. Fork realities, simulate futures, and explore alternative implementations.',
       gradient: 'from-indigo-600 to-purple-600',
       stats: ['Time travel', 'Fork realities', 'Predict outcomes'],
-      demo: 'Replay your entire development journey'
+      demo: 'Replay your entire development journey',
+      link: '/innovation/time-machine'
     },
     {
       icon: <Shield className="w-12 h-12" />,
@@ -44,7 +48,8 @@ export default function InnovationShowcase() {
       description: 'Learn security by attacking your own contracts. Test reentrancy, overflows, and flash loan attacks in a safe sandbox.',
       gradient: 'from-red-600 to-orange-600',
       stats: ['6 attack vectors', '100% ethical', 'Real exploits'],
-      demo: 'Hack yourself before hackers do'
+      demo: 'Hack yourself before hackers do',
+      link: '/innovation/exploit-lab'
     },
     {
       icon: <Users className="w-12 h-12" />,
@@ -52,7 +57,8 @@ export default function InnovationShowcase() {
       description: 'Code with AI teammates. Compete in challenges, earn bounties, and learn from AI mentors in real-time.',
       gradient: 'from-violet-600 to-fuchsia-600',
       stats: ['Live collab', 'AI teammates', 'Earn rewards'],
-      demo: 'Multi-player coding with AI assistants'
+      demo: 'Multi-player coding with AI assistants',
+      link: '/innovation/arena'
     },
     {
       icon: <Zap className="w-12 h-12" />,
@@ -60,7 +66,17 @@ export default function InnovationShowcase() {
       description: 'ML-powered gas optimization. Train neural networks on 100k+ contracts to predict and reduce gas costs.',
       gradient: 'from-cyan-600 to-blue-600',
       stats: ['3 ML models', 'Live predictions', '70% savings'],
-      demo: 'AI learns from blockchain to save you gas'
+      demo: 'AI learns from blockchain to save you gas',
+      link: '/innovation/gas-oracle'
+    },
+    {
+      icon: <Globe className="w-12 h-12" />,
+      title: 'Cross-Chain Dream Weaver',
+      description: 'Deploy to 8+ blockchains with one click. Smart AI deployment, auto-bridge setup, and cost optimization.',
+      gradient: 'from-emerald-600 to-teal-600',
+      stats: ['8+ chains', 'Auto-bridge', 'One-click deploy'],
+      demo: 'One contract, infinite chains',
+      link: '/innovation/cross-chain'
     }
   ];
 
@@ -177,9 +193,19 @@ export default function InnovationShowcase() {
                     ))}
                   </div>
 
-                  <div className="flex items-center space-x-2 text-yellow-400 font-medium">
-                    <Sparkles className="w-5 h-5" />
-                    <span>{feature.demo}</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2 text-yellow-400 font-medium">
+                      <Sparkles className="w-5 h-5" />
+                      <span>{feature.demo}</span>
+                    </div>
+                    
+                    <Link
+                      to={feature.link}
+                      className={`inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r ${feature.gradient} rounded-lg font-semibold text-sm hover:opacity-90 transition-all hover:scale-105 shadow-lg`}
+                    >
+                      Try It
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
                   </div>
                 </div>
               </div>

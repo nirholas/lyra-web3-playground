@@ -5,10 +5,10 @@
  */
 
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import WebSandbox from '@/components/Sandbox/WebSandbox';
 import SoliditySandbox from '@/components/Sandbox/SoliditySandbox';
-import { Code2, FileCode, Layers, Sparkles, Zap, Globe, ArrowRight } from 'lucide-react';
+import { Code2, FileCode, Layers, Sparkles, Zap, Globe, ArrowRight, Home } from 'lucide-react';
 import { cn } from '@/utils/helpers';
 
 type SandboxType = 'web' | 'solidity' | null;
@@ -39,6 +39,21 @@ export default function SandboxPage() {
   // Otherwise, show the selection screen
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white">
+      {/* Navigation Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center h-12 px-4 bg-gray-900/80 backdrop-blur-sm border-b border-gray-800">
+        <Link
+          to="/"
+          className="flex items-center gap-2 px-3 py-1.5 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+        >
+          <Home className="w-4 h-4" />
+          <span className="text-sm font-medium">Home</span>
+        </Link>
+        <div className="ml-4 flex items-center gap-2">
+          <Zap className="w-4 h-4 text-primary-500" />
+          <span className="text-sm font-medium text-white">Lyra IDE</span>
+        </div>
+      </header>
+
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-primary-500/10 rounded-full blur-3xl" />

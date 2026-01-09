@@ -47,6 +47,24 @@ export default function ContractPlayground() {
   const [isCompiling, setIsCompiling] = useState(false);
   const [compileResult, setCompileResult] = useState<CompileOutput | null>(null);
   const [compilerLog, setCompilerLog] = useState<string[]>([]);
+  // Multi-file playground for web preview and other file types
+  const [files, setFiles] = useState<{name: string; content: string}[]>(() => [
+    { name: 'index.html', content: '<h1>Hello Lyra Playground</h1>\n<button id="btn">Click me</button>' },
+    { name: 'styles.css', content: 'body { font-family: system-ui, sans-serif; padding: 24px; } button { padding:8px 12px; }' },
+    { name: 'script.js', content: 'document.getElementById("btn").addEventListener("click", () => console.log("Button clicked"))' },
+  ]);
+  const [selectedFile, setSelectedFile] = useState<string>('index.html');
+  const [showPreview, setShowPreview] = useState(true);
+  const [showConsole, setShowConsole] = useState(true);
+  const [newFileModalOpen, setNewFileModalOpen] = useState(false);
+  const [newFileName, setNewFileName] = useState('');
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const [consoleLogs, setConsoleLogs] = useState<Array<{type?:string; text: string; time: string}>>(() => [
+    { type: 'log', text: '🚀 App initialized!', time: new Date().toLocaleTimeString() },
+    { type: 'info', text: 'ℹ️ Try clicking the button', time: new Date().toLocaleTimeString() },
+  ]);
+  const previewTimer = useRef<number | null>(null);
+  const [previewKey, setPreviewKey] = useState(0);
   
   const editorRef = useRef<any>(null);
   
@@ -243,6 +261,87 @@ export default function ContractPlayground() {
       setIsDeploying(false);
     }
   };
+
+  // Utilities for multi-file editor / preview
+  const getLanguageForFile = (name: string) => {
+    const ext = name.split('.').pop() || '';
+    switch (ext) {
+      case 'html': return 'html';
+      case 'css': return 'css';
+      case 'js': return 'javascript';
+      case 'ts': return 'typescript';
+      case 'json': return 'json';
+      case 'sol': return 'sol';
+      default: return 'plaintext';
+    }
+  };
+
+  const updateFileContent = (name: string, content: string) => {
+    setFiles(prev => prev.map(f => f.name === name ? { ...f, content } : f));
+  };
+
+  const deleteFile = (name: string) => {
+    if (files.length <= 1) return; // Keep at least one file
+    const newFiles = files.filter(f => f.name !== name);
+    setFiles(newFiles);
+    if (selectedFile === name) {
+      setSelectedFile(newFiles[0]?.name || '');
+    }
+    schedulePreviewUpdate();
+  };
+
+  const renameFile = (oldName: string, newName: string) => {
+    if (!newName.trim() || oldName === newName) return;
+    if (files.some(f => f.name === newName)) return; // Name conflict
+    setFiles(prev => prev.map(f => f.name === oldName ? { ...f, name: newName } : f));
+    if (selectedFile === oldName) {
+      setSelectedFile(newName);
+    }
+    schedulePreviewUpdate();
+  };
+
+  const addNewFile = () => {
+    const name = newFileName.trim();
+    if (!name) return;
+    if (files.some(f => f.name === name)) return; // Already exists
+    setFiles(prev => [...prev, { name, content: '' }]);
+    setSelectedFile(name);
+    setNewFileModalOpen(false);
+    setNewFileName('');
+  };
+
+  const buildPreviewSrcDoc = () => {
+    const htmlFile = files.find(f => f.name.endsWith('.html'))?.content || '<div id="root"></div>';
+    const css = files.filter(f => f.name.endsWith('.css')).map(f => f.content).join('\n');
+    const js = files.filter(f => f.name.endsWith('.js')).map(f => f.content).join('\n');
+
+    // Inject console bridge to post messages to parent
+    const consoleBridge = `\n<script>;(function(){const origConsole={log:console.log,warn:console.warn,error:console.error,info:console.info};function send(type,args){try{parent.postMessage({__lyra_preview_console:true,type,entries:args.map(a=>String(a))},'*')}catch(e){}}['log','warn','error','info'].forEach(function(m){console[m]=function(){send(m,Array.from(arguments));try{origConsole[m].apply(console,arguments);}catch(e){}}});})();</script>`;
+
+    return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1" /><style>${css}</style></head><body>${htmlFile}${consoleBridge}<script>${js}</script></body></html>`;
+  };
+
+  // Debounced preview update
+  const schedulePreviewUpdate = () => {
+    if (previewTimer.current) window.clearTimeout(previewTimer.current);
+    previewTimer.current = window.setTimeout(() => {
+      setPreviewKey(k => k + 1);
+    }, 200);
+  };
+
+  // Listen for console messages from iframe
+  useEffect(() => {
+    const handler = (ev: MessageEvent) => {
+      const data = ev.data as any;
+      if (data && data.__lyra_preview_console) {
+        const time = new Date().toLocaleTimeString();
+        const text = (data.entries || []).join(' ');
+        setConsoleLogs(prev => [{ type: data.type, text, time }, ...prev].slice(0, 200));
+      }
+    };
+    window.addEventListener('message', handler);
+    return () => window.removeEventListener('message', handler);
+  }, []);
 
   // Example prompts
   const examplePrompts = [
@@ -487,48 +586,151 @@ export default function ContractPlayground() {
             </div>
           )}
 
-          {/* Editor */}
-          <div className="flex-1 overflow-hidden">
-            {code ? (
-              <Editor
-                height="100%"
-                defaultLanguage="sol"
-                language="sol"
-                value={code}
-                onChange={(value) => setCode(value || '')}
-                theme={mode === 'dark' ? 'vs-dark' : 'light'}
-                options={{
-                  minimap: { enabled: false },
-                  fontSize: 14,
-                  lineNumbers: 'on',
-                  scrollBeyondLastLine: false,
-                  automaticLayout: true,
-                  tabSize: 4,
-                  wordWrap: 'on',
-                }}
-                onMount={(editor) => {
-                  editorRef.current = editor;
-                }}
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center max-w-md">
-                  <Code2 className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                  <h3 className="text-lg font-semibold mb-2">No Contract Loaded</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    Generate a contract using AI or select a template from the sidebar to get started
-                  </p>
-                  <div className="space-y-2 text-sm text-left bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                    <p className="font-medium text-blue-900 dark:text-blue-100">Quick Tips:</p>
-                    <ul className="space-y-1 text-blue-800 dark:text-blue-200">
-                      <li>• Use AI to generate contracts from natural language</li>
-                      <li>• Browse 40+ pre-built templates</li>
-                      <li>• Edit code in real-time with syntax highlighting</li>
-                      <li>• Deploy to any supported blockchain</li>
-                    </ul>
-                  </div>
+          {/* Editor / Multi-file Playground */}
+          <div className="flex-1 overflow-hidden flex">
+            {/* Left: Editor area with file tabs */}
+            <div className={`${showPreview ? 'w-1/2' : 'flex-1'} border-r border-gray-200 dark:border-gray-700 flex flex-col bg-white dark:bg-gray-800`}>
+              <div className="flex items-center px-3 py-2 border-b border-gray-100 dark:border-gray-700 gap-2">
+                <div className="flex-1 flex items-center gap-1 overflow-x-auto">
+                  {files.map((f) => (
+                    <div
+                      key={f.name}
+                      className={`group flex items-center text-sm px-3 py-1 rounded-t-lg -mb-px cursor-pointer ${selectedFile === f.name ? 'bg-white dark:bg-gray-800 border border-b-0 border-gray-200 dark:border-gray-700 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+                      onClick={() => setSelectedFile(f.name)}
+                    >
+                      <span>{f.name}</span>
+                      {files.length > 1 && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); deleteFile(f.name); }}
+                          className="ml-2 opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-opacity"
+                          title="Delete file"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setNewFileModalOpen(true)}
+                    title="New file"
+                    className="px-2 py-1 text-xs rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    +
+                  </button>
+                  <button
+                    onClick={() => setShowPreview(s => !s)}
+                    title="Toggle preview"
+                    className="px-2 py-1 text-xs rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    {showPreview ? 'Hide Preview' : 'Show Preview'}
+                  </button>
                 </div>
               </div>
+
+              <div className="flex-1 overflow-hidden">
+                {selectedFile && selectedFile.endsWith('.sol') ? (
+                  // Keep legacy contract editor when editing .sol files
+                  <Editor
+                    height="100%"
+                    defaultLanguage="sol"
+                    language="sol"
+                    value={code}
+                    onChange={(value) => setCode(value || '')}
+                    theme={mode === 'dark' ? 'vs-dark' : 'light'}
+                    options={{
+                      minimap: { enabled: false },
+                      fontSize: 14,
+                      lineNumbers: 'on',
+                      scrollBeyondLastLine: false,
+                      automaticLayout: true,
+                      tabSize: 4,
+                      wordWrap: 'on',
+                    }}
+                    onMount={(editor) => { editorRef.current = editor; }}
+                  />
+                ) : (
+                  <Editor
+                    height="100%"
+                    defaultLanguage={getLanguageForFile(selectedFile || 'index.html')}
+                    language={getLanguageForFile(selectedFile || 'index.html')}
+                    value={files.find(f => f.name === selectedFile)?.content || ''}
+                    onChange={(value) => {
+                      updateFileContent(selectedFile, value || '');
+                      schedulePreviewUpdate();
+                    }}
+                    theme={mode === 'dark' ? 'vs-dark' : 'light'}
+                    options={{
+                      minimap: { enabled: false },
+                      fontSize: 14,
+                      lineNumbers: 'on',
+                      scrollBeyondLastLine: false,
+                      automaticLayout: true,
+                      tabSize: 2,
+                      wordWrap: 'on',
+                    }}
+                    onMount={(editor) => { editorRef.current = editor; }}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Right: Live preview + console */}
+            {showPreview && (
+            <div className="flex-1 flex flex-col bg-white overflow-hidden">
+              <div className="flex-1 overflow-auto flex items-center justify-center bg-gray-100">
+                <div className="w-full h-full max-w-full max-h-full transition-all duration-300">
+                  <iframe
+                    key={previewKey}
+                    ref={iframeRef}
+                    title="Preview"
+                    className="w-full h-full bg-white"
+                    sandbox="allow-scripts allow-modals allow-forms allow-same-origin"
+                    srcDoc={buildPreviewSrcDoc()}
+                  />
+                </div>
+              </div>
+
+              {showConsole && (
+              <div className="h-48 bg-gray-900 border-t border-gray-700 flex flex-col">
+                <div className="flex items-center justify-between px-3 py-1.5 bg-gray-800 border-b border-gray-700">
+                  <div className="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-terminal w-4 h-4 text-gray-400"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg>
+                    <span className="text-xs font-medium text-gray-400">Console</span>
+                    <span className="text-xs px-1.5 py-0.5 bg-gray-700 rounded text-gray-300">{consoleLogs.length}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <button onClick={() => setConsoleLogs([])} className="p-1 hover:bg-gray-700 rounded transition-colors" title="Clear console">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trash2 w-3.5 h-3.5 text-gray-400"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+                    </button>
+                    <button onClick={() => setShowConsole(false)} className="p-1 hover:bg-gray-700 rounded transition-colors" title="Hide console">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-panel-bottom-close w-3.5 h-3.5 text-gray-400"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><line x1="3" x2="21" y1="15" y2="15"></line><path d="m15 8-3 3-3-3"></path></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto font-mono text-xs">
+                  {consoleLogs.map((log, i) => (
+                    <div key={i} className="flex items-start gap-2 px-3 py-1.5 border-b border-gray-800">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-4 h-4 ${log.type === 'error' ? 'text-red-500' : log.type === 'warn' ? 'text-yellow-400' : log.type === 'info' ? 'text-blue-500' : 'text-gray-400'}`}><circle cx="12" cy="12" r="10"></circle></svg>
+                      <span className={`flex-1 whitespace-pre-wrap break-all ${log.type === 'info' ? 'text-blue-400' : 'text-gray-300'}`}>{log.text}</span>
+                      <span className="text-gray-600 text-[10px]">{log.time}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              )}
+              {!showConsole && (
+                <button
+                  onClick={() => setShowConsole(true)}
+                  className="h-8 bg-gray-800 border-t border-gray-700 flex items-center justify-center gap-2 text-xs text-gray-400 hover:bg-gray-700 transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg>
+                  Console ({consoleLogs.length})
+                </button>
+              )}
+            </div>
             )}
           </div>
 
@@ -556,6 +758,42 @@ export default function ContractPlayground() {
           )}
         </div>
       </div>
+
+      {/* New File Modal */}
+      {newFileModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold mb-4">Create New File</h3>
+            <input
+              type="text"
+              value={newFileName}
+              onChange={(e) => setNewFileName(e.target.value)}
+              placeholder="filename.html, styles.css, script.js, contract.sol..."
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 mb-4 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') addNewFile();
+                if (e.key === 'Escape') { setNewFileModalOpen(false); setNewFileName(''); }
+              }}
+            />
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => { setNewFileModalOpen(false); setNewFileName(''); }}
+                className="px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={addNewFile}
+                disabled={!newFileName.trim()}
+                className="px-4 py-2 text-sm rounded-lg bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
