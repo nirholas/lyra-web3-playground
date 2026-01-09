@@ -11,6 +11,7 @@ import { useThemeStore } from '@/stores/themeStore';
 import { useWalletStore } from '@/stores/walletStore';
 import ShareModal from './ShareModal';
 import WalletConnect from '@/components/WalletConnect';
+import TemplatesPanel from './TemplatesPanel';
 import {
   Play,
   RotateCcw,
@@ -306,6 +307,7 @@ export default function WebSandbox({
   const [searchQuery, setSearchQuery] = useState('');
   const [showShareModal, setShowShareModal] = useState(false);
   const [showWalletModal, setShowWalletModal] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
   
   const { address, isConnected } = useWalletStore();
   
@@ -561,6 +563,14 @@ export default function WebSandbox({
     setTimeout(() => setCopied(false), 2000);
   };
   
+  const loadTemplateFiles = (templateFiles: { id: string; name: string; language: string; content: string; isEntry?: boolean }[]) => {
+    setFiles(templateFiles);
+    setActiveFileId(templateFiles[0]?.id || '');
+    setOpenTabs([templateFiles[0]?.id || '']);
+    setShowTemplates(false);
+    setTimeout(() => runCode(), 100);
+  };
+  
   const downloadProject = () => {
     // Create a zip-like download (simplified as individual files)
     files.forEach(file => {
@@ -692,6 +702,19 @@ export default function WebSandbox({
               Auto
             </button>
             
+            {/* Templates Button */}
+            <button
+              onClick={() => setShowTemplates(!showTemplates)}
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-colors",
+                showTemplates ? "bg-purple-600 text-white" : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+              )}
+              title="Browse templates"
+            >
+              <Sparkles className="w-4 h-4" />
+              Templates
+            </button>
+            
             <div className="w-px h-6 bg-gray-700" />
             
             {/* Layout Controls */}
@@ -772,6 +795,16 @@ export default function WebSandbox({
       
       {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
+        {/* Templates Panel */}
+        {showTemplates && (
+          <aside className="w-80 border-r border-gray-700 flex-shrink-0">
+            <TemplatesPanel
+              onSelectTemplate={loadTemplateFiles}
+              onClose={() => setShowTemplates(false)}
+            />
+          </aside>
+        )}
+        
         {/* Sidebar - File Tree */}
         {showSidebar && (
           <aside className="w-56 bg-gray-850 border-r border-gray-700 flex flex-col flex-shrink-0">

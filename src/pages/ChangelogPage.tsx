@@ -8,6 +8,7 @@
  * ChangelogPage.tsx - Version history and release notes
  */
 import { Sparkles, Rocket, Code2, BookOpen, Layers, Coins, Shield, Wrench } from 'lucide-react';
+import { useSEO } from '@/hooks/useSEO';
 
 interface Release {
   version: string;
@@ -111,6 +112,12 @@ const tagStyles: Record<Release['tag'], string> = {
 };
 
 export default function ChangelogPage() {
+  useSEO({
+    title: 'Changelog',
+    description: 'View the latest updates, new features, and improvements to Lyra Web3 Playground. Stay up to date with our development progress.',
+    path: '/changelog'
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-16">
       <div className="container mx-auto px-4">

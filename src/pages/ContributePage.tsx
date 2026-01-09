@@ -21,8 +21,15 @@ import {
   GitPullRequest
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 
 export default function ContributePage() {
+  useSEO({
+    title: 'Contribute',
+    description: 'Join the Lyra open source community. Contribute code, documentation, tutorials, or translations. Every contribution makes a difference.',
+    path: '/contribute'
+  });
+
   const contributionTypes = [
     {
       icon: Code2,

@@ -24,6 +24,7 @@
   "dependencies": {
     "@icons-pack/react-simple-icons": "^10.0.0",
     "@monaco-editor/react": "^4.6.0",
+    "@privy-io/react-auth": "^3.10.1",
     "@solana/web3.js": "^1.87.0",
     "@supabase/supabase-js": "^2.39.0",
     "clsx": "^2.0.0",

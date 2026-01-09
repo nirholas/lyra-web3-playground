@@ -6,6 +6,7 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import {
   HelpCircle,
   ChevronDown,
@@ -166,6 +167,12 @@ const faqs: FAQItem[] = [
 ];
 
 export default function FAQPage() {
+  useSEO({
+    title: 'FAQ - Frequently Asked Questions',
+    description: 'Get answers to common questions about Solidity development, smart contract security, gas optimization, wallet integration, and blockchain deployment.',
+    path: '/faq'
+  });
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);

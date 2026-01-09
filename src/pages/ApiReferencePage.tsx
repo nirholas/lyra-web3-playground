@@ -5,6 +5,7 @@
  */
 
 import { Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import {
   FileCode,
   ChevronRight,
@@ -240,6 +241,12 @@ const apiSections: ApiSection[] = [
 ];
 
 export default function ApiReferencePage() {
+  useSEO({
+    title: 'API Reference',
+    description: 'Complete API documentation for Lyra Web3 Playground. Compilation, deployment, template, and project sharing endpoints with examples.',
+    path: '/docs/api'
+  });
+
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const copyCode = (code: string) => {

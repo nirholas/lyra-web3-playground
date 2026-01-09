@@ -6,6 +6,7 @@
 
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import { 
   Search, 
   Wallet, 
@@ -192,6 +193,12 @@ const difficulties = [
 ];
 
 export default function ExamplesPage() {
+  useSEO({
+    title: 'Examples',
+    description: 'Explore working code examples for Web3 development. Token swaps, NFT minting, DAO governance, wallet connections, and more - all with live previews.',
+    path: '/examples'
+  });
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');

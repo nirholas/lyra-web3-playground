@@ -5,8 +5,15 @@
  */
 
 import { FileText, Scale, AlertTriangle, Gavel, Users, Zap, Globe, Calendar, CheckCircle, Shield, Ban, Coins } from 'lucide-react';
+import { useSEO } from '@/hooks/useSEO';
 
 export default function TermsPage() {
+  useSEO({
+    title: 'Terms of Service',
+    description: 'Lyra Web3 Playground terms of service. Understand your rights and responsibilities when using our blockchain development and smart contract learning platform.',
+    path: '/terms'
+  });
+
   const lastUpdated = 'December 28, 2025';
 
   const sections = [

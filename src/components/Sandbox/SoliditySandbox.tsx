@@ -11,6 +11,8 @@ import { useThemeStore } from '@/stores/themeStore';
 import { useWalletStore } from '@/stores/walletStore';
 import ShareModal from './ShareModal';
 import WalletConnect from '@/components/WalletConnect';
+import TemplateSelector from '@/components/Playground/TemplateSelector';
+import { ContractTemplate } from '@/utils/contractTemplates';
 import {
   Play,
   Rocket,
@@ -54,7 +56,8 @@ import {
   GripVertical,
   Search,
   Share2,
-  Home
+  Home,
+  BookOpen
 } from 'lucide-react';
 import { cn } from '@/utils/helpers';
 
@@ -244,6 +247,7 @@ export default function SoliditySandbox() {
   const [functionInputs, setFunctionInputs] = useState<Record<string, Record<string, Record<string, string>>>>({});
   const [showShareModal, setShowShareModal] = useState(false);
   const [showWalletModal, setShowWalletModal] = useState(false);
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
   
   const { address, isConnected } = useWalletStore();
   const editorRef = useRef<any>(null);
@@ -273,6 +277,20 @@ export default function SoliditySandbox() {
     setFiles(prev => prev.map(f => 
       f.id === fileId ? { ...f, content } : f
     ));
+  };
+  
+  const handleTemplateSelect = (template: ContractTemplate) => {
+    const newFile: ContractFile = {
+      id: Date.now().toString(),
+      name: `${template.name.replace(/[^a-zA-Z0-9]/g, '')}.sol`,
+      content: template.code
+    };
+    
+    setFiles(prev => [...prev, newFile]);
+    setActiveFileId(newFile.id);
+    setOpenTabs(prev => [...prev, newFile.id]);
+    setShowTemplateSelector(false);
+    log('info', `Loaded template: ${template.name}`);
   };
   
   const createNewFile = () => {
@@ -947,7 +965,7 @@ contract ${name.replace('.sol', '')} {
           </Link>
           <div className="w-px h-5 bg-gray-700" />
           <Code2 className="w-5 h-5 text-purple-500" />
-          <span className="font-semibold text-sm">Solidity IDE</span>
+          <span className="font-semibold text-sm">Solidity UDE</span>
           <span className="text-xs px-2 py-0.5 bg-purple-600/30 text-purple-400 rounded">
             {solcVersion.version}
           </span>
@@ -1002,13 +1020,32 @@ contract ${name.replace('.sol', '')} {
           <aside className="w-56 bg-gray-850 border-r border-gray-700 flex flex-col flex-shrink-0">
             <div className="flex items-center justify-between px-3 py-2 border-b border-gray-700">
               <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Contracts</span>
-              <button
-                onClick={createNewFile}
-                className="p-1 hover:bg-gray-700 rounded transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setShowTemplateSelector(true)}
+                  className="p-1 hover:bg-gray-700 rounded transition-colors"
+                  title="Browse 41 contract templates"
+                >
+                  <BookOpen className="w-4 h-4 text-purple-400" />
+                </button>
+                <button
+                  onClick={createNewFile}
+                  className="p-1 hover:bg-gray-700 rounded transition-colors"
+                  title="New file"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
             </div>
+            
+            {/* Templates Quick Access */}
+            <button
+              onClick={() => setShowTemplateSelector(true)}
+              className="mx-2 mt-2 px-3 py-2 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 rounded-lg text-purple-400 text-xs font-medium flex items-center gap-2 transition-colors"
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              41 Templates Available
+            </button>
             
             <div className="flex-1 overflow-y-auto py-2">
               {files.map(file => (
@@ -1206,6 +1243,32 @@ contract ${name.replace('.sol', '')} {
               Connect your wallet to share projects and access community features.
             </p>
             <WalletConnect onConnect={() => setShowWalletModal(false)} />
+          </div>
+        </div>
+      )}
+      
+      {/* Template Selector Modal */}
+      {showTemplateSelector && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-6xl max-h-[90vh] mx-4 shadow-2xl flex flex-col overflow-hidden">
+            <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Contract Templates</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">41 pre-built smart contract templates</p>
+              </div>
+              <button
+                onClick={() => setShowTemplateSelector(false)}
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-auto p-4">
+              <TemplateSelector
+                onTemplateSelect={handleTemplateSelect}
+                compact={false}
+              />
+            </div>
           </div>
         </div>
       )}

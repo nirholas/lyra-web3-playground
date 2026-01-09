@@ -5,6 +5,7 @@
  */
 
 import { Link } from 'react-router-dom';
+import { useSEO } from '@/hooks/useSEO';
 import {
   Brain,
   History,
@@ -23,6 +24,12 @@ import {
 } from 'lucide-react';
 
 export default function InnovationShowcase() {
+  useSEO({
+    title: 'Innovation Lab',
+    description: 'Cutting-edge Web3 development tools: AI Code Whisperer, Contract Time Machine, Exploit Lab, Neural Gas Oracle, and Cross-Chain DreamWeaver.',
+    path: '/innovation'
+  });
+
   const features = [
     {
       icon: <Brain className="w-12 h-12" />,
