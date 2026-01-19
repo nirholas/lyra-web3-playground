@@ -102,7 +102,7 @@
     "education"
   ],
   "engines": {
-    "node": "22.x"
+    "node": "20.x"
   },
   "overrides": {
     "diff": "^8.0.3",
