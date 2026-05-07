@@ -16,7 +16,7 @@ NOTICE: This project contains embedded watermarks and attribution markers.
 Removal or modification of attribution constitutes violation of the license.
 ═══════════════════════════════════════════════════════════════════════════════
 -->
- 
+  
 # Lyra Web3 Playground 
 
 <p align="center">
