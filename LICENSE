@@ -1,24 +1,20 @@
-Lyra Community License
+Copyright 2026 nirholas
 
-Copyright (c) 2025 - present nirholas. All rights reserved.
+All rights reserved.
 
-----------
+This software is proprietary and may not be used, copied, modified, distributed,
+translated, or made available to any third party without the express written
+permission of the copyright owner.
 
-Lyra Web3 Playground is licensed under the Lyra Community License, based on Apache License 2.0 with the following additional conditions:
+No rights are granted by implication, estoppel, or otherwise. Use of this
+software is subject to the terms of a separate license agreement with the
+copyright owner.
 
-1. The commercial usage of Lyra Web3 Playground:
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
 
-  a. Lyra Web3 Playground may be utilized commercially, including as a frontend and backend service without modifying the source code.
-
-  b. A commercial license must be obtained from the producer if you want to develop and distribute a derivative work based on Lyra Web3 Playground.
-
-Please contact nich@lyra.works by email to inquire about licensing matters.
-
-
-2. As a contributor, you should agree that:
-
-  a. The producer can adjust the open-source agreement to be more strict or relaxed as deemed necessary.
-
-  b. Your contributed code may be used for commercial purposes, including but not limited to its cloud edition.
-
-Apart from the specific conditions mentioned above, all other rights and restrictions follow the Apache License 2.0. Detailed information about the Apache License 2.0 can be found at http://www.apache.org/licenses/LICENSE-2.0.
+IN NO EVENT SHALL THE COPYRIGHT OWNER BE LIABLE FOR ANY CLAIM, DAMAGES, OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE,
+ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.

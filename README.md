@@ -22,8 +22,6 @@ Removal or modification of attribution constitutes violation of the license.
 <p align="center">
   <strong>✨ Built by <a href="https://x.com/nichxbt">nich</a> | <a href="https://github.com/nirholas">GitHub</a> | <a href="https://x.com/nichxbt">X/Twitter</a></strong>
 </p>
-
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Live Demo](https://img.shields.io/badge/demo-lyra.works-blue)](https://lyra.works)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18-61dafb)](https://react.dev/)
