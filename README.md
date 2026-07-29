@@ -321,6 +321,27 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+### Environment Variables
+
+The app runs without configuration, but wallet login, the backend API, RPC access
+and Supabase-backed features need credentials. Copy the example file and fill it in:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Purpose |
+| --- | --- |
+| `VITE_PRIVY_APP_ID` | Privy application ID used for wallet / email login |
+| `VITE_API_URL` | Base URL of the backend API (defaults to `http://localhost:3001`) |
+| `VITE_INFURA_API_KEY` | Infura project ID for read-only RPC calls |
+| `VITE_SUPABASE_URL` | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Supabase anon (public) key |
+
+Every `VITE_`-prefixed value is inlined into the client bundle and is therefore
+public — never put a private key or server secret in `.env`. Server-side secrets
+belong in `server/.env` (see `server/.env.example`).
+
 ### Build for Production
 
 ```bash

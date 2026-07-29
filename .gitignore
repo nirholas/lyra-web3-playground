@@ -16,6 +16,9 @@ build/
 .env.local
 .env.production
 .env.development
+.env.save
+.env.*.local
+!.env.example
 
 # Editor directories and files
 .vscode/*
