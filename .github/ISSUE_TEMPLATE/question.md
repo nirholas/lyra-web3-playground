@@ -16,4 +16,4 @@ assignees: ''
 <!-- What are you trying to accomplish? -->
 
 ---
-*Tip: Check the [FAQ](https://lyra.works/faq) and [Getting Started guide](../docs/GETTING_STARTED.md) first!*
+*Tip: Check the [FAQ](../../README.md#-frequently-asked-questions) and [Getting Started guide](../../docs/GETTING_STARTED.md) first!*
