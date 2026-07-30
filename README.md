@@ -553,3 +553,10 @@ All rights reserved. See the [LICENSE](LICENSE) file for details.
   Built with ❤️ by <a href="https://x.com/nichxbt">nich</a>
 </p>
 
+
+## Documentation
+
+Full documentation site: **https://nirholas.github.io/lyra-web3-playground/**
+
+- [Getting started](docs/getting-started.md) covers install and first run.
+- [Examples](docs/examples.md) has copy-paste snippets.
