@@ -1,6 +1,6 @@
 {
   "name": "lyra-web3-playground",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Lyra Web3 Playground - Learn blockchain development with interactive examples. Compile and deploy Solidity in your browser. Built by nich.",
   "author": {
     "name": "nich (nirholas)",
