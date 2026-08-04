@@ -1,0 +1,2 @@
+import{b as e}from"./react-vendor-Cp2JmYUv.js";function a({title:r,titleId:o,...t},n){return e.createElement("svg",Object.assign({xmlns:"http://www.w3.org/2000/svg",fill:"none",viewBox:"0 0 24 24",strokeWidth:1.5,stroke:"currentColor","aria-hidden":"true","data-slot":"icon",ref:n,"aria-labelledby":o},t),r?e.createElement("title",{id:o},r):null,e.createElement("path",{strokeLinecap:"round",strokeLinejoin:"round",d:"m19.5 8.25-7.5 7.5-7.5-7.5"}))}const i=e.forwardRef(a);export{i as F};
+//# sourceMappingURL=ChevronDownIcon-BkCxevWb.js.map

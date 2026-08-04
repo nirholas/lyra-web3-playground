@@ -1,0 +1,2 @@
+import{b as r}from"./react-vendor-Cp2JmYUv.js";import{aQ as u}from"./index-CwvhYMZj.js";const p=({enabled:o=!0}={})=>{let{showFiatPrices:s,getUsdPriceForSol:i}=u(),[l,t]=r.useState(!0),[c,a]=r.useState(void 0),[f,n]=r.useState(void 0);return r.useEffect((()=>{(async()=>{if(s&&o)try{t(!0);let e=await i();e?n(e):a(Error("Unable to fetch SOL price"))}catch(e){a(e)}finally{t(!1)}else t(!1)})()}),[]),{solPrice:f,isSolPriceLoading:l,solPriceError:c}};export{p as t};
+//# sourceMappingURL=useGetSolPrice-x7gfUIHJ-GC6w8WkY.js.map

@@ -1,0 +1,2 @@
+import{br as s}from"./index-CwvhYMZj.js";import{aI as c,aJ as i}from"./web3-vendor-CGwxEKZx.js";const u=async({chain:a,address:t,appId:e,rpcConfig:n,erc20Address:r})=>({balance:await c({chain:a,transport:i(s(a,n,e))}).readContract({address:r,abi:p,functionName:"balanceOf",args:[t]}).catch((()=>0n)),chain:a});let p=[{constant:!0,inputs:[{name:"_owner",type:"address"}],name:"balanceOf",outputs:[{name:"balance",type:"uint256"}],payable:!1,stateMutability:"view",type:"function"}];export{u as n};
+//# sourceMappingURL=getErc20Balance-DHgWH7_1-E0ATGWEI.js.map
