@@ -1,6 +1,6 @@
 {
   "name": "lyra-web3-playground",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Lyra Web3 Playground - Learn blockchain development with interactive examples. Compile and deploy Solidity in your browser. Built by nich.",
   "author": {
     "name": "nich (nirholas)",
@@ -42,25 +42,6 @@
     "test:coverage": "vitest --coverage",
     "attribution": "node scripts/inject-attribution.js"
   },
-  "dependencies": {
-    "@icons-pack/react-simple-icons": "^13.8.0",
-    "@monaco-editor/react": "^4.7.0",
-    "@privy-io/react-auth": "^3.36.1",
-    "@solana/web3.js": "^1.98.4",
-    "@supabase/supabase-js": "^2.90.1",
-    "@types/dompurify": "^3.2.0",
-    "clsx": "^2.1.1",
-    "dompurify": "^3.4.13",
-    "ethers": "^6.16.0",
-    "lucide-react": "^0.562.0",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "react-live": "^4.1.8",
-    "react-router-dom": "^7.18.2",
-    "tailwind-merge": "^3.4.0",
-    "viem": "^2.44.4",
-    "zustand": "^5.0.10"
-  },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@testing-library/jest-dom": "^6.9.1",
@@ -84,7 +65,24 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.0",
     "vite": "^7.3.1",
-    "vitest": "^4.0.17"
+    "vitest": "^4.0.17",
+    "@icons-pack/react-simple-icons": "^13.8.0",
+    "@monaco-editor/react": "^4.7.0",
+    "@privy-io/react-auth": "^3.36.1",
+    "@solana/web3.js": "^1.98.4",
+    "@supabase/supabase-js": "^2.90.1",
+    "@types/dompurify": "^3.2.0",
+    "clsx": "^2.1.1",
+    "dompurify": "^3.4.13",
+    "ethers": "^6.16.0",
+    "lucide-react": "^0.562.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-live": "^4.1.8",
+    "react-router-dom": "^7.18.2",
+    "tailwind-merge": "^3.4.0",
+    "viem": "^2.44.4",
+    "zustand": "^5.0.10"
   },
   "license": "SEE LICENSE IN LICENSE",
   "keywords": [
