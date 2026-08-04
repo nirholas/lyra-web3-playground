@@ -15,7 +15,6 @@
 // AI PROVIDER ICONS
 // =============================================================================
 export {
-  SiOpenai as OpenAI,
   SiAnthropic as Anthropic,
   SiGooglegemini as Gemini,
   SiMeta as Meta,
