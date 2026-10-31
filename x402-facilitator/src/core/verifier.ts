@@ -49,6 +49,51 @@ function getClient(chainId: SupportedChainId) {
 }
 
 /**
+ * Check that a payment satisfies the resource server's requirements: same
+ * chain, same asset, paid to the required recipient, at least the required
+ * amount, and the requirement itself not expired. Returns null when it does.
+ */
+function checkRequirements(payment: X402Payment, requirements: PaymentRequirements): VerifyResult | null {
+  const { chainId, token, authorization } = payment;
+
+  if (chainId !== requirements.chainId) {
+    return { valid: false, reason: 'Chain ID mismatch' };
+  }
+
+  if (token.toLowerCase() !== requirements.asset.toLowerCase()) {
+    return { valid: false, reason: 'Asset mismatch' };
+  }
+
+  if (authorization.to.toLowerCase() !== requirements.payTo.toLowerCase()) {
+    return { valid: false, reason: 'Recipient mismatch' };
+  }
+
+  if (authorization.value < requirements.maxAmountRequired) {
+    return { valid: false, reason: 'Insufficient payment amount' };
+  }
+
+  if (requirements.expiry != null && requirements.expiry <= Math.floor(Date.now() / 1000)) {
+    return { valid: false, reason: 'Payment requirement expired' };
+  }
+
+  return null;
+}
+
+/**
+ * Verify a payment and bind it to the supplied requirements. Used by the
+ * Facilitator so /verify and /settle never accept a payment that does not
+ * satisfy the requirements the caller sent.
+ */
+export async function verifyPaymentForRequirements(
+  payment: X402Payment,
+  requirements: PaymentRequirements,
+): Promise<VerifyResult> {
+  const mismatch = checkRequirements(payment, requirements);
+  if (mismatch) return mismatch;
+  return verifyPayment(payment);
+}
+
+/**
  * Full payment verifier that validates against requirements.
  * Used by tests and the Facilitator.
  */
@@ -62,25 +107,8 @@ export class PaymentVerifier {
   async verify(payment: X402Payment, requirements: PaymentRequirements): Promise<VerifyResult> {
     const { chainId, token, authorization, signature } = payment;
 
-    // Chain ID match
-    if (chainId !== requirements.chainId) {
-      return { valid: false, reason: 'Chain ID mismatch' };
-    }
-
-    // Asset match (case-insensitive)
-    if (token.toLowerCase() !== requirements.asset.toLowerCase()) {
-      return { valid: false, reason: 'Asset mismatch' };
-    }
-
-    // Recipient match
-    if (authorization.to.toLowerCase() !== requirements.payTo.toLowerCase()) {
-      return { valid: false, reason: 'Recipient mismatch' };
-    }
-
-    // Amount sufficient
-    if (authorization.value < requirements.maxAmountRequired) {
-      return { valid: false, reason: 'Insufficient payment amount' };
-    }
+    const mismatch = checkRequirements(payment, requirements);
+    if (mismatch) return mismatch;
 
     // Timing constraints
     const now = BigInt(Math.floor(Date.now() / 1000));
@@ -89,14 +117,6 @@ export class PaymentVerifier {
     }
     if (authorization.validBefore <= now) {
       return { valid: false, reason: 'Authorization expired' };
-    }
-
-    // Requirements expiry
-    if (requirements.expiry != null) {
-      const nowSec = Math.floor(Date.now() / 1000);
-      if (requirements.expiry <= nowSec) {
-        return { valid: false, reason: 'Payment requirement expired' };
-      }
     }
 
     // Value must be positive
