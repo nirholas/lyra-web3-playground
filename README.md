@@ -7,7 +7,7 @@ LYRA WEB3 PLAYGROUND
 🐦 Twitter/X: x.com/nichxbt  
 🐙 GitHub: github.com/nirholas
 📦 Repository: github.com/nirholas/lyra-web3-playground
-🌐 Hosted demo: offline while hosting is migrated. Source: github.com/nirholas/lyra-web3-playground
+🌐 Live: https://lyra.works
 
 Copyright (c) 2024-2026 nirholas (nich)
 All rights reserved. See the LICENSE file.
@@ -35,7 +35,7 @@ Removal or modification of attribution constitutes violation of the license.
   <a href="https://github.com/nirholas/lyra-web3-playground"><strong>Get the source on GitHub</strong></a>
 </p>
 
-> **Hosting note:** the hosted demo at lyra.works is currently offline while hosting is being migrated. Clone the repo and run `npm install && npm run dev` to use every environment below at `http://localhost:3000`.
+> **Live:** every environment below is hosted at **https://lyra.works** (Cloudflare Pages). To run it locally, clone the repo and run `npm install && npm run dev`, then open `http://localhost:3000`.
 
 ---
 
@@ -435,6 +435,7 @@ npm run preview
 | [Architecture Overview](docs/ARCHITECTURE.md) | System design |
 | [Backend API](docs/BACKEND_API.md) | API reference |
 | [Deployment Guide](docs/DEPLOYMENT.md) | Deploy your own instance |
+| [Cloudflare Pages Deploy](docs/deploy-cloudflare.md) | How https://lyra.works is built, deployed and rolled back |
 | [Security](docs/SECURITY.md) | Security practices |
 | [Accessibility](docs/ACCESSIBILITY.md) | A11y features and usage |
 
@@ -556,7 +557,7 @@ All rights reserved. See the [LICENSE](LICENSE) file for details.
 
 ## Documentation
 
-Full documentation site: **https://nirholas.github.io/lyra-web3-playground/**
+Live app: **https://lyra.works**. Documentation lives in [`docs/`](docs/).
 
 - [Getting started](docs/getting-started.md) covers install and first run.
 - [Examples](docs/examples.md) has copy-paste snippets.
