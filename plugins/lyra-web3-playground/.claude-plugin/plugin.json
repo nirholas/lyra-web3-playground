@@ -1,0 +1,16 @@
+{
+  "name": "lyra-web3-playground",
+  "version": "0.1.6",
+  "description": "Compile Solidity and deploy to testnets through the Lyra Web3 Playground backend API.",
+  "author": {
+    "name": "nirholas"
+  },
+  "repository": "https://github.com/nirholas/lyra-web3-playground",
+  "homepage": "https://lyra.works",
+  "keywords": [
+    "solidity",
+    "compiler",
+    "smart-contracts",
+    "testnet"
+  ]
+}
